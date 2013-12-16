@@ -1,6 +1,8 @@
 magic
 tech c035u
-timestamp 1387234469
+timestamp 1387235973
+<< pwell >>
+rect 9360 0 9560 48
 << metal1 >>
 rect 4141 918 4943 928
 rect 1861 895 2015 907
@@ -148,12 +150,20 @@ rect 8472 847 8484 856
 rect 8544 847 8556 856
 rect 8592 847 8604 960
 rect 9120 847 9132 851
+rect 9360 847 9560 960
+rect 0 0 200 48
+rect 216 0 228 48
+rect 240 0 252 48
+rect 264 0 276 48
+rect 288 0 300 48
 rect 1656 0 1668 48
 rect 2784 0 2796 48
 rect 3648 0 3660 48
 rect 4056 0 4068 48
 rect 4440 0 4452 48
+rect 5880 0 5892 48
 rect 8088 0 8100 48
+rect 9360 0 9560 48
 use leftbuf leftbuf_0
 timestamp 1386242881
 transform 1 0 0 0 1 48
@@ -295,4 +305,12 @@ rlabel metal2 8232 960 8244 960 1 QUOT_INV_Cout
 rlabel metal2 8376 960 8388 960 1 INV_QUOT
 rlabel metal2 6384 960 6396 960 5 Load_REM
 rlabel metal2 8592 960 8604 960 5 LOAD_QUOT
+rlabel metal2 5880 0 5892 0 1 ACC_INV_Cin
+rlabel metal2 288 0 300 0 1 nReset
+rlabel metal2 264 0 276 0 1 Clock
+rlabel metal2 240 0 252 0 1 Test
+rlabel metal2 216 0 228 0 1 SDI
+rlabel metal2 0 0 200 0 1 Vdd!
+rlabel metal2 9360 960 9560 960 5 GND!
+rlabel metal2 9360 0 9560 0 1 GND!
 << end >>
