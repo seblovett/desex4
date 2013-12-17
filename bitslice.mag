@@ -284,7 +284,7 @@ rlabel metal2 4440 0 4452 0 1 OP1_INV_Cin
 rlabel metal2 2784 0 2796 0 1 DIVH_1
 rlabel metal2 3648 0 3660 0 1 DIVL_1
 rlabel metal2 4056 0 4068 0 1 ACC_Cin
-rlabel metal2 8088 0 8100 0 1 QUOT_INV_Cin
+rlabel metal2 8088 0 8100 0 1 RESULT_INV_Cin
 rlabel metal2 1800 960 1812 960 5 OP2_INV_Cout
 rlabel metal2 3024 960 3036 960 5 DIVL_P
 rlabel metal2 3000 960 3012 960 5 LOAD_DIVL
@@ -298,8 +298,8 @@ rlabel metal2 1944 960 1956 960 5 INV_OP2
 rlabel metal2 2208 960 2220 960 5 DIVH_P
 rlabel metal2 2136 960 2148 960 1 LOAD_DIVH
 rlabel metal2 7152 960 7164 960 1 RESULT_P
-rlabel metal2 8232 960 8244 960 1 QUOT_INV_Cout
-rlabel metal2 8376 960 8388 960 1 INV_QUOT
+rlabel metal2 8232 960 8244 960 1 RESULT_INV_Cout
+rlabel metal2 8376 960 8388 960 1 INV_RESULT
 rlabel metal2 6384 960 6396 960 5 LOAD_REM
 rlabel metal2 8592 960 8604 960 5 LOAD_QUOT
 rlabel metal2 5880 0 5892 0 1 ACC_INV_Cin
