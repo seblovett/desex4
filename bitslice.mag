@@ -1,12 +1,6 @@
 magic
 tech c035u
-timestamp 1387311232
-<< error_s >>
-rect 6100 48 6108 58
-rect 8308 48 8316 58
-rect 8692 48 8700 58
-<< pwell >>
-rect 9590 0 9790 48
+timestamp 1387314597
 << metal1 >>
 rect 4261 918 5063 928
 rect 1861 895 2015 907
@@ -167,15 +161,15 @@ rect 2784 35 2796 48
 rect 2928 35 2940 48
 rect 2784 23 2940 35
 rect 2784 0 2796 23
-rect 2952 0 2964 50
+rect 2952 0 2964 48
 rect 3768 0 3780 48
 rect 4176 0 4188 48
 rect 4560 0 4572 48
 rect 5256 0 5268 48
-rect 6110 0 6122 48
-rect 8318 0 8330 48
-rect 8702 0 8714 48
-rect 9590 0 9790 48
+rect 6096 0 6108 48
+rect 7992 0 8004 48
+rect 8304 0 8316 48
+rect 9576 0 9776 48
 use leftbuf leftbuf_0
 timestamp 1386242881
 transform 1 0 0 0 1 48
@@ -315,10 +309,6 @@ rlabel metal2 4704 960 4716 960 1 OP1_INV_Cout
 rlabel metal2 4848 960 4860 960 5 INV_OP1
 rlabel metal2 5040 960 5052 960 1 LOAD_ACC
 rlabel metal2 4320 960 4332 960 1 ACC_Cout
-rlabel metal2 8702 0 8714 0 1 RESULT_1
-rlabel metal2 9590 0 9790 0 1 GND!
-rlabel metal2 6110 0 6122 0 1 ACC_INV_Cin
-rlabel metal2 8318 0 8330 0 1 RESULT_INV_Cin
 rlabel metal2 6240 960 6252 960 1 ACC_INV_Cout
 rlabel metal2 6384 960 6396 960 1 INV_REM
 rlabel metal2 7368 960 7380 960 1 RESULT_P
@@ -326,7 +316,6 @@ rlabel metal2 8448 960 8460 960 1 RESULT_INV_Cout
 rlabel metal2 8592 960 8604 960 1 INV_RESULT
 rlabel metal2 6600 960 6612 960 5 LOAD_REM
 rlabel metal2 8808 960 8820 960 5 LOAD_QUOT
-rlabel metal2 9576 960 9776 960 5 GND!
 rlabel metal2 7344 960 7356 960 5 RESULT_nP_0
 rlabel metal1 9786 855 9786 865 7 Quotient
 rlabel metal1 9786 902 9786 912 7 Remainder
@@ -334,4 +323,9 @@ rlabel metal2 5256 960 5268 960 5 ACC_LOAD
 rlabel metal2 5256 0 5268 0 1 ACC_LOAD
 rlabel metal2 2952 0 2964 0 1 DIVH_0_P
 rlabel metal2 3000 960 3012 960 5 DIVH_0
+rlabel metal2 6096 0 6108 0 1 ACC_INV_Cin
+rlabel metal2 8304 0 8316 0 1 RESULT_INV_Cin
+rlabel metal2 7992 0 8004 0 1 RESULT_1
+rlabel metal2 9576 0 9776 0 1 GND!
+rlabel metal2 9576 960 9776 960 5 GND!
 << end >>
