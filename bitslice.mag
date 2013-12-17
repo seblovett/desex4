@@ -1,13 +1,13 @@
 magic
 tech c035u
-timestamp 1387235973
+timestamp 1387283479
 << pwell >>
 rect 9360 0 9560 48
 << metal1 >>
 rect 4141 918 4943 928
 rect 1861 895 2015 907
 rect 4645 896 4799 906
-rect 6925 902 9560 912
+rect 6925 902 9570 912
 rect 0 874 4272 884
 rect 4286 874 4750 884
 rect 4837 874 4991 884
@@ -27,7 +27,7 @@ rect 5725 852 6191 862
 rect 7069 860 7199 870
 rect 7789 857 7919 867
 rect 7933 857 8399 867
-rect 9133 855 9560 865
+rect 9133 855 9570 865
 << m2contact >>
 rect 4127 916 4141 930
 rect 4943 916 4957 930
@@ -285,8 +285,6 @@ rlabel metal2 2784 0 2796 0 1 DIVH_1
 rlabel metal2 3648 0 3660 0 1 DIVL_1
 rlabel metal2 4056 0 4068 0 1 ACC_Cin
 rlabel metal2 8088 0 8100 0 1 QUOT_INV_Cin
-rlabel metal1 9560 855 9560 865 1 QUOT
-rlabel metal1 9560 902 9560 912 7 REM
 rlabel metal2 1800 960 1812 960 5 OP2_INV_Cout
 rlabel metal2 3024 960 3036 960 5 DIVL_P
 rlabel metal2 3000 960 3012 960 5 LOAD_DIVL
@@ -300,7 +298,6 @@ rlabel metal2 1944 960 1956 960 5 INV_OP2
 rlabel metal2 2208 960 2220 960 5 DIVH_P
 rlabel metal2 2136 960 2148 960 1 LOAD_DIVH
 rlabel metal2 7152 960 7164 960 1 RESULT_P
-rlabel metal2 7128 960 7140 960 1 RESULT_SHIFT_0
 rlabel metal2 8232 960 8244 960 1 QUOT_INV_Cout
 rlabel metal2 8376 960 8388 960 1 INV_QUOT
 rlabel metal2 6384 960 6396 960 5 LOAD_REM
@@ -313,4 +310,7 @@ rlabel metal2 216 0 228 0 1 SDI
 rlabel metal2 0 0 200 0 1 Vdd!
 rlabel metal2 9360 960 9560 960 5 GND!
 rlabel metal2 9360 0 9560 0 1 GND!
+rlabel metal2 7128 960 7140 960 5 RESULT_nP_0
+rlabel metal1 9570 855 9570 865 7 Quotient
+rlabel metal1 9570 902 9570 912 7 Remainder
 << end >>
