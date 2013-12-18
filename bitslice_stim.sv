@@ -154,19 +154,23 @@ initial
 	#1000 
 		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 1 "); end
 		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 1"); end
-		DIVH_P = 1; //shift in one
+		
+	DIVH_P = 1; //shift in one
 	#1000 
 		assert(DIVH_1 == 1) else begin errors = errors + 1; $display("DIVH_1 Err 2 "); end
 		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 2"); end
-		LOAD_DIVH = 1; //load from OP2
+		
+	LOAD_DIVH = 1; //load from OP2
 	#1000 
 		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 3 "); end
 		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 3"); end
-		INV_OP2 = 1; //choose OP2 inverted
+		
+	INV_OP2 = 1; //choose OP2 inverted
 	#1000 	
 		assert(DIVH_1 == 1) else begin errors = errors + 1; $display("DIVH_1 Err 4 "); end
 		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 4"); end
-		OP2_INV_Cin = 1; //put Cin into the negator. Will then be S=0 and C = 1
+	
+	OP2_INV_Cin = 1; //put Cin into the negator. Will then be S=0 and C = 1
 	#1000 	
 		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 5 "); end
 		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 5"); end
@@ -174,9 +178,67 @@ initial
 		assert(OP2_INV_Cout == 1) else begin errors = errors + 1; $display("DIVH_1 Err 6 "); end
 		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 6"); end
 end
-//Test of the zero checker
 
 
+//test the result and quotient sections
+initial 
+  begin
+	//initialise everything 
+	RESULT_P = 0;
+	RESULT_INV_Cin = 0;
+	INV_RESULT = 0;
+	RESULT_nP_0 = 0;
+	
+	//test storing to RESULT Reg
+	#1000 
+	
+	RESULT_P = 1; //Shift in = 1, but should still select 0
+	#1000
+		assert(RESULT_1 == 1) else begin errors = errors + 1; $display("RESULT_1 Err 1"); end
+	
+	//test the negator works
+	INV_RESULT = 1;
+	#1000
+		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 2"); end
+	
+	RESULT_INV_Cin = 1;
+	#1000
+		assert(RESULT_1 == 1) else begin errors = errors + 1; $display("RESULT_1 Err 3"); end
+	
+	//test with p = 0
+	RESULT_P = 0; //Shift in = 1, but should still select 0
+	#1000
+		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 4"); end
+	//test the negator works
+	INV_RESULT = 1;
+	#1000
+		assert(RESULT_1 == 1) else begin errors = errors + 1; $display("RESULT_1 Err 5"); end
+
+	RESULT_INV_Cin = 1;
+	#1000
+		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 6"); end
+		assert(RESULT_INV_Cout == 1) else begin errors = errors + 1; $display("RESULT_INV_Cout Err 1"); end
+	
+	INV_RESULT = 0;
+	RESULT_nP_0 = 1;
+	#1000
+		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 7"); end
+
+	//test load to Quot
+	RESULT_nP_0 = 0;
+	RESULT_P = 1;
+	LOAD_QUOT = 1; //load to quotient
+	#1000
+		assert(RESULT_1 == 1) else begin errors = errors + 1; $display("RESULT_1 Err 8"); end
+		assert(Quotient == 0) else begin errors = errors + 1; $display("QUOT Err 1"); end
+	
+	RESULT_P = 0;
+	#1000
+		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 9"); end
+		assert(Quotient == 1) else begin errors = errors + 1; $display("QUOT Err 2"); end
+	
+	
+  end
 
 /*
 initial
