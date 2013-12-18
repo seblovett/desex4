@@ -87,8 +87,11 @@ bitslice instance1(
 
 // stimulus information follows
 
+int errors;
+
 initial
   begin
+    errors = 0;
     ACC_Cin = 0;
     ACC_INV_Cin = 0;
     ACC_LOAD = 0;
@@ -116,118 +119,66 @@ initial
     SDI = 0;
     Test = 0;
 
-    #1000
-          ACC_Cin = 1;
-    #1000
-          ACC_INV_Cin = 1;
-    #1000
-          ACC_LOAD = 1;
-    #1000
-          Clock = 1;
-    #1000
-          DIVH_0_P = 1;
-    #1000
-          DIVH_P = 1;
-    #1000
-          DIVL_P = 1;
-    #1000
-          INV_OP1 = 1;
-    #1000
-          INV_OP2 = 1;
-    #1000
-          INV_REM = 1;
-    #1000
-          INV_RESULT = 1;
-    #1000
-          LOAD_ACC = 1;
-    #1000
-          LOAD_DIVH = 1;
-    #1000
-          LOAD_DIVL = 1;
-    #1000
-          LOAD_QUOT = 1;
-    #1000
-          LOAD_REM = 1;
-    #1000
-          nReset = 1;
-    #1000
-          OP1_INV_Cin = 1;
-    #1000
-          OP2_INV_Cin = 1;
-    #1000
-          Operand1 = 1;
-    #1000
-          Operand2 = 1;
-    #1000
-          RESULT_INV_Cin = 1;
-    #1000
-          RESULT_nP_0 = 1;
-    #1000
-          RESULT_P = 1;
-    #1000
-          SDI = 1;
-    #1000
-          Test = 1;
-    #1000
-          ACC_Cin = 0;
-    #1000
-          ACC_INV_Cin = 0;
-    #1000
-          ACC_LOAD = 0;
-    #1000
-          Clock = 0;
-    #1000
-          DIVH_0_P = 0;
-    #1000
-          DIVH_P = 0;
-    #1000
-          DIVL_P = 0;
-    #1000
-          INV_OP1 = 0;
-    #1000
-          INV_OP2 = 0;
-    #1000
-          INV_REM = 0;
-    #1000
-          INV_RESULT = 0;
-    #1000
-          LOAD_ACC = 0;
-    #1000
-          LOAD_DIVH = 0;
-    #1000
-          LOAD_DIVL = 0;
-    #1000
-          LOAD_QUOT = 0;
-    #1000
-          LOAD_REM = 0;
-    #1000
-          nReset = 0;
-    #1000
-          OP1_INV_Cin = 0;
-    #1000
-          OP2_INV_Cin = 0;
-    #1000
-          Operand1 = 0;
-    #1000
-          Operand2 = 0;
-    #1000
-          RESULT_INV_Cin = 0;
-    #1000
-          RESULT_nP_0 = 0;
-    #1000
-          RESULT_P = 0;
-    #1000
-          SDI = 0;
-    #1000
-          Test = 0;
-
-    #1000
-          $stop;
-          $finish;
   end
 
 // probe information follows
+always
+begin
+        Clock = 0;
+        for(int i = 0; i < 12; i++)
+        begin
+                #250 Clock = 1;
+                #500 Clock = 0;
+                #250 Clock = 0;
+        end
+end
 
+initial
+begin
+ 	nReset = 1;
+ 	#500  nReset = 0;
+ 	#500  nReset = 1;
+	//@todo asserts to verify dtypes reset
+	#20000 $stop;
+end
+
+
+//Test sequence for the first loading and shifting into DIVH
+initial
+ begin
+	DIVH_0_P = 0;
+	INV_OP2 = 0;
+	LOAD_DIVH = 0;
+	DIVH_P = 0;
+	OP2_INV_Cin = 0;
+	#1000 
+		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 1 "); end
+		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 1"); end
+		DIVH_P = 1; //shift in one
+	#1000 
+		assert(DIVH_1 == 1) else begin errors = errors + 1; $display("DIVH_1 Err 2 "); end
+		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 2"); end
+		LOAD_DIVH = 1; //load from OP2
+	#1000 
+		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 3 "); end
+		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 3"); end
+		INV_OP2 = 1; //choose OP2 inverted
+	#1000 	
+		assert(DIVH_1 == 1) else begin errors = errors + 1; $display("DIVH_1 Err 4 "); end
+		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 4"); end
+		OP2_INV_Cin = 1; //put Cin into the negator. Will then be S=0 and C = 1
+	#1000 	
+		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 5 "); end
+		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 5"); end
+	#1000 
+		assert(OP2_INV_Cout == 1) else begin errors = errors + 1; $display("DIVH_1 Err 6 "); end
+		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 6"); end
+end
+//Test of the zero checker
+
+
+
+/*
 initial
   $monitor($time,
     ,"%b", ACC_Cin ,
@@ -268,7 +219,7 @@ initial
     ,"%b", RESULT_1 ,
     ,"%b", RESULT_INV_Cout ,
     );
-
+*/
 
 //SIMVISION SCRIPT:bitslice.tcl
 
