@@ -1,6 +1,6 @@
 magic
 tech c035u
-timestamp 1387464820
+timestamp 1387648896
 << metal1 >>
 rect 4141 918 4943 928
 rect 1861 895 2015 907
@@ -112,7 +112,7 @@ rect 5088 847 5100 851
 rect 5136 847 5148 960
 rect 5616 847 5628 873
 rect 5664 847 5676 850
-rect 5832 846 5844 873
+rect 5832 847 5844 873
 rect 6000 847 6012 960
 rect 6048 847 6060 873
 rect 6144 847 6156 960
@@ -292,7 +292,6 @@ rlabel metal2 4584 960 4596 960 1 OP1_INV_Cout
 rlabel metal2 4728 960 4740 960 5 INV_OP1
 rlabel metal2 4920 960 4932 960 1 LOAD_ACC
 rlabel metal2 4200 960 4212 960 1 ACC_Cout
-rlabel metal2 5136 0 5148 0 1 ACC_LOAD
 rlabel metal2 5136 960 5148 960 5 STORE_ACC
 rlabel metal2 6360 960 6372 960 5 STORE_REM
 rlabel metal2 7752 0 7764 0 1 RESULT_1
@@ -303,10 +302,11 @@ rlabel metal2 6144 960 6156 960 1 INV_REM
 rlabel metal2 6000 960 6012 960 1 ACC_INV_Cout
 rlabel metal2 8088 960 8100 960 1 RESULT_INV_Cout
 rlabel metal2 8232 960 8244 960 1 INV_RESULT
-rlabel metal2 8448 960 8460 960 5 LOAD_QUOT
 rlabel metal1 9426 855 9426 865 7 Quotient
 rlabel metal1 9426 902 9426 912 7 Remainder
 rlabel metal2 7944 0 7956 0 1 RESULT_INV_Cin
 rlabel metal2 9216 0 9416 0 1 GND!
 rlabel metal2 9216 960 9416 960 5 GND!
+rlabel metal2 5136 0 5148 0 1 STORE_ACC
+rlabel space 8447 961 8460 961 5 STORE_QUOT
 << end >>
