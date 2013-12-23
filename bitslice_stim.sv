@@ -108,6 +108,8 @@ end
 
 initial
 begin
+	Test = 0;
+	SDI = 0;
         nReset = 1;
         #500  nReset = 0;
         #500  nReset = 1;
@@ -156,8 +158,61 @@ initial
     ,"%b", RESULT_1 ,
     ,"%b", RESULT_INV_Cout ,
     );
+//Test sequence for ACC and REM circuit
+initial
+ begin
+	DIVL_P = 0;
+	LOAD_DIVL = 0;
+	Operand1 = 0;
+	OP1_INV_Cin = 0;
+	ACC_Cin = 0;
+	LOAD_ACC = 0;
+	STORE_ACC = 0;
+	ACC_INV_Cin = 0;
+	INV_REM = 0;
+	STORE_REM = 0;
+	INV_OP1 = 0;
+ end
+//Test sequence for result and quotient part of the slice
+initial
+ begin
+	//initialise all signals
+	RESULT_P = 0;
+	RESULT_nP_0 = 0;
+	RESULT_INV_Cin = 0;
+	INV_RESULT = 0;
+	STORE_QUOT = 0;
 
+	#1000
+		assert( 0 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
+	
+	RESULT_P = 1;
+	#1000
+		assert( 1 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
+	
+	RESULT_nP_0 = 1;
+	#1000 
+		assert( 0 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
 
+	RESULT_nP_0 = 0;
+	#1000
+		assert( 1 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
+
+	//store to the output reg
+	STORE_QUOT = 1;
+	
+	#1000
+		assert ( RESULT_1 == Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+
+	RESULT_1 = 0;
+	#1000
+		assert ( RESULT_1 == Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+	
+	INV_RESULT = 1;
+	#1000
+		assert ( RESULT_1 != Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+	//need to check it stores when the load signal is low and also check the negating circuit
+ end
 //Test sequence for the first loading and shifting into DIVH
 initial
  begin

@@ -18,6 +18,7 @@ set wave_signal_list {
   bitslice_stim.INV_OP2
   bitslice_stim.LOAD_DIVH
   bitslice_stim.DIVH_P
+  bitslice_stim.instance1.DIVH_D
   bitslice_stim.DIVH_1
   bitslice_stim.DIVH_0_P
   bitslice_stim.DIVH_0
