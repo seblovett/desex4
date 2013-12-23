@@ -1,6 +1,6 @@
 magic
 tech c035u
-timestamp 1387739150
+timestamp 1387820120
 << metal1 >>
 rect 4141 918 4943 928
 rect 1861 895 2015 907
@@ -309,4 +309,5 @@ rlabel metal2 9216 0 9416 0 1 GND!
 rlabel metal2 9216 960 9416 960 5 GND!
 rlabel metal2 5136 0 5148 0 1 STORE_ACC
 rlabel metal2 8448 960 8460 960 5 STORE_QUOT
+rlabel metal1 2303 857 2303 857 1 DIVH_D
 << end >>
