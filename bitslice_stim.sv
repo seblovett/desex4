@@ -8,7 +8,6 @@ timeprecision 10ps;
 
 logic ACC_Cin ;
 logic ACC_INV_Cin ;
-logic ACC_LOAD ;
 logic Clock ;
 logic DIVH_0_P ;
 logic DIVH_P ;
@@ -20,8 +19,6 @@ logic INV_RESULT ;
 logic LOAD_ACC ;
 logic LOAD_DIVH ;
 logic LOAD_DIVL ;
-logic LOAD_QUOT ;
-logic LOAD_REM ;
 logic nReset ;
 logic OP1_INV_Cin ;
 logic OP2_INV_Cin ;
@@ -31,6 +28,9 @@ logic RESULT_INV_Cin ;
 logic RESULT_nP_0 ;
 logic RESULT_P ;
 logic SDI ;
+logic STORE_ACC ;
+logic STORE_QUOT ;
+logic STORE_REM ;
 logic Test ;
 
 wire ACC_Cout ;
@@ -59,7 +59,6 @@ bitslice instance1(
 	.RESULT_INV_Cout ( RESULT_INV_Cout ),
 	.ACC_Cin ( ACC_Cin ),
 	.ACC_INV_Cin ( ACC_INV_Cin ),
-	.ACC_LOAD ( ACC_LOAD ),
 	.Clock ( Clock ),
 	.DIVH_0_P ( DIVH_0_P ),
 	.DIVH_P ( DIVH_P ),
@@ -71,8 +70,6 @@ bitslice instance1(
 	.LOAD_ACC ( LOAD_ACC ),
 	.LOAD_DIVH ( LOAD_DIVH ),
 	.LOAD_DIVL ( LOAD_DIVL ),
-	.LOAD_QUOT ( LOAD_QUOT ),
-	.LOAD_REM ( LOAD_REM ),
 	.nReset ( nReset ),
 	.OP1_INV_Cin ( OP1_INV_Cin ),
 	.OP2_INV_Cin ( OP2_INV_Cin ),
@@ -82,46 +79,20 @@ bitslice instance1(
 	.RESULT_nP_0 ( RESULT_nP_0 ),
 	.RESULT_P ( RESULT_P ),
 	.SDI ( SDI ),
+	.STORE_ACC ( STORE_ACC ),
+	.STORE_QUOT ( STORE_QUOT ),
+	.STORE_REM ( STORE_REM ),
 	.Test ( Test )
 	);
 
-// stimulus information follows
-
 int errors;
 
+//run time
 initial
-  begin
-    errors = 0;
-    ACC_Cin = 0;
-    ACC_INV_Cin = 0;
-    ACC_LOAD = 0;
-    Clock = 0;
-    DIVH_0_P = 0;
-    DIVH_P = 0;
-    DIVL_P = 0;
-    INV_OP1 = 0;
-    INV_OP2 = 0;
-    INV_REM = 0;
-    INV_RESULT = 0;
-    LOAD_ACC = 0;
-    LOAD_DIVH = 0;
-    LOAD_DIVL = 0;
-    LOAD_QUOT = 0;
-    LOAD_REM = 0;
-    nReset = 0;
-    OP1_INV_Cin = 0;
-    OP2_INV_Cin = 0;
-    Operand1 = 0;
-    Operand2 = 0;
-    RESULT_INV_Cin = 0;
-    RESULT_nP_0 = 0;
-    RESULT_P = 0;
-    SDI = 0;
-    Test = 0;
+        #20000 $stop;
 
-  end
 
-// probe information follows
+//Clock
 always
 begin
         Clock = 0;
@@ -133,119 +104,24 @@ begin
         end
 end
 
+//Reset pulse
+
 initial
 begin
- 	nReset = 1;
- 	#500  nReset = 0;
- 	#500  nReset = 1;
-	//@todo asserts to verify dtypes reset
-	#20000 $stop;
+	Test = 0;
+	SDI = 0;
+        nReset = 1;
+        #500  nReset = 0;
+        #500  nReset = 1;
+        //@todo asserts to verify dtypes reset
 end
 
+// probe information follows
 
-//Test sequence for the first loading and shifting into DIVH
-initial
- begin
-	DIVH_0_P = 0;
-	INV_OP2 = 0;
-	LOAD_DIVH = 0;
-	DIVH_P = 0;
-	OP2_INV_Cin = 0;
-	#1000 
-		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 1 "); end
-		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 1"); end
-		
-	DIVH_P = 1; //shift in one
-	#1000 
-		assert(DIVH_1 == 1) else begin errors = errors + 1; $display("DIVH_1 Err 2 "); end
-		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 2"); end
-		
-	LOAD_DIVH = 1; //load from OP2
-	#1000 
-		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 3 "); end
-		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 3"); end
-		
-	INV_OP2 = 1; //choose OP2 inverted
-	#1000 	
-		assert(DIVH_1 == 1) else begin errors = errors + 1; $display("DIVH_1 Err 4 "); end
-		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 4"); end
-	
-	OP2_INV_Cin = 1; //put Cin into the negator. Will then be S=0 and C = 1
-	#1000 	
-		assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 5 "); end
-		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 5"); end
-	#1000 
-		assert(OP2_INV_Cout == 1) else begin errors = errors + 1; $display("DIVH_1 Err 6 "); end
-		assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 6"); end
-end
-
-
-//test the result and quotient sections
-initial 
-  begin
-	//initialise everything 
-	RESULT_P = 0;
-	RESULT_INV_Cin = 0;
-	INV_RESULT = 0;
-	RESULT_nP_0 = 0;
-	
-	//test storing to RESULT Reg
-	#1000 
-	
-	RESULT_P = 1; //Shift in = 1, but should still select 0
-	#1000
-		assert(RESULT_1 == 1) else begin errors = errors + 1; $display("RESULT_1 Err 1"); end
-	
-	//test the negator works
-	INV_RESULT = 1;
-	#1000
-		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 2"); end
-	
-	RESULT_INV_Cin = 1;
-	#1000
-		assert(RESULT_1 == 1) else begin errors = errors + 1; $display("RESULT_1 Err 3"); end
-	
-	//test with p = 0
-	RESULT_P = 0; //Shift in = 1, but should still select 0
-	#1000
-		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 4"); end
-	//test the negator works
-	INV_RESULT = 1;
-	#1000
-		assert(RESULT_1 == 1) else begin errors = errors + 1; $display("RESULT_1 Err 5"); end
-
-	RESULT_INV_Cin = 1;
-	#1000
-		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 6"); end
-		assert(RESULT_INV_Cout == 1) else begin errors = errors + 1; $display("RESULT_INV_Cout Err 1"); end
-	
-	INV_RESULT = 0;
-	RESULT_nP_0 = 1;
-	#1000
-		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 7"); end
-
-	//test load to Quot
-	RESULT_nP_0 = 0;
-	RESULT_P = 1;
-	LOAD_QUOT = 1; //load to quotient
-	#1000
-		assert(RESULT_1 == 1) else begin errors = errors + 1; $display("RESULT_1 Err 8"); end
-		assert(Quotient == 0) else begin errors = errors + 1; $display("QUOT Err 1"); end
-	
-	RESULT_P = 0;
-	#1000
-		assert(RESULT_1 == 0) else begin errors = errors + 1; $display("RESULT_1 Err 9"); end
-		assert(Quotient == 1) else begin errors = errors + 1; $display("QUOT Err 2"); end
-	
-	
-  end
-
-/*
 initial
   $monitor($time,
     ,"%b", ACC_Cin ,
     ,"%b", ACC_INV_Cin ,
-    ,"%b", ACC_LOAD ,
     ,"%b", Clock ,
     ,"%b", DIVH_0_P ,
     ,"%b", DIVH_P ,
@@ -257,8 +133,6 @@ initial
     ,"%b", LOAD_ACC ,
     ,"%b", LOAD_DIVH ,
     ,"%b", LOAD_DIVL ,
-    ,"%b", LOAD_QUOT ,
-    ,"%b", LOAD_REM ,
     ,"%b", nReset ,
     ,"%b", OP1_INV_Cin ,
     ,"%b", OP2_INV_Cin ,
@@ -268,6 +142,9 @@ initial
     ,"%b", RESULT_nP_0 ,
     ,"%b", RESULT_P ,
     ,"%b", SDI ,
+    ,"%b", STORE_ACC ,
+    ,"%b", STORE_QUOT ,
+    ,"%b", STORE_REM ,
     ,"%b", Test ,
     ,"%b", ACC_Cout ,
     ,"%b", ACC_INV_Cout ,
@@ -281,7 +158,98 @@ initial
     ,"%b", RESULT_1 ,
     ,"%b", RESULT_INV_Cout ,
     );
-*/
+//Test sequence for ACC and REM circuit
+initial
+ begin
+	DIVL_P = 0;
+	LOAD_DIVL = 0;
+	Operand1 = 0;
+	OP1_INV_Cin = 0;
+	ACC_Cin = 0;
+	LOAD_ACC = 0;
+	STORE_ACC = 0;
+	ACC_INV_Cin = 0;
+	INV_REM = 0;
+	STORE_REM = 0;
+	INV_OP1 = 0;
+ end
+//Test sequence for result and quotient part of the slice
+initial
+ begin
+	//initialise all signals
+	RESULT_P = 0;
+	RESULT_nP_0 = 0;
+	RESULT_INV_Cin = 0;
+	INV_RESULT = 0;
+	STORE_QUOT = 0;
+
+	#1000
+		assert( 0 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
+	
+	RESULT_P = 1;
+	#1000
+		assert( 1 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
+	
+	RESULT_nP_0 = 1;
+	#1000 
+		assert( 0 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
+
+	RESULT_nP_0 = 0;
+	#1000
+		assert( 1 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
+
+	//store to the output reg
+	STORE_QUOT = 1;
+	
+	#1000
+		assert ( RESULT_1 == Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+
+	RESULT_1 = 0;
+	#1000
+		assert ( RESULT_1 == Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+	
+	INV_RESULT = 1;
+	#1000
+		assert ( RESULT_1 != Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+	//need to check it stores when the load signal is low and also check the negating circuit
+ end
+//Test sequence for the first loading and shifting into DIVH
+initial
+ begin
+ 	Operand2=0;
+        DIVH_0_P = 0;
+        INV_OP2 = 0;
+        LOAD_DIVH = 0;
+        DIVH_P = 0;
+        OP2_INV_Cin = 0;
+        #1000
+                assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 1 "); end
+                assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 1"); end
+
+        DIVH_P = 1; //shift in one
+        #1000
+                assert(DIVH_1 == 1) else begin errors = errors + 1; $display("DIVH_1 Err 2 "); end
+                assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 2"); end
+
+        LOAD_DIVH = 1; //load from OP2
+        #1000
+                assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 3 "); end
+                assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 3"); end
+
+        INV_OP2 = 1; //choose OP2 inverted
+        #1000
+                assert(DIVH_1 == 1) else begin errors = errors + 1; $display("DIVH_1 Err 4 "); end
+                assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 4"); end
+
+        OP2_INV_Cin = 1; //put Cin into the negator. Will then be S=0 and C = 1
+        #1000
+                assert(DIVH_1 == 0) else begin errors = errors + 1; $display("DIVH_1 Err 5 "); end
+                assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 5"); end
+        #1000
+                assert(OP2_INV_Cout == 1) else begin errors = errors + 1; $display("DIVH_1 Err 6 "); end
+                assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 6"); end
+end
+
 
 //SIMVISION SCRIPT:bitslice.tcl
 
