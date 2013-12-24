@@ -12,6 +12,7 @@ simvision {
 set wave_signal_list {
   bitslice_stim.Clock
   bitslice_stim.nReset
+  bitslice_stim.errors
   bitslice_stim.Operand2
   bitslice_stim.OP2_INV_Cin
   bitslice_stim.OP2_INV_Cout
