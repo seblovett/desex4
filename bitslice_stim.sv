@@ -85,12 +85,17 @@ bitslice instance1(
 	.Test ( Test )
 	);
 
-int errors;
+int errors, finished;
 
 //run time
-initial
-        #20000 $stop;
-
+//initial
+//      	#40000 $stop;
+always
+	#1000 if ( 3 == finished ) 
+	 begin
+		$display("Simulation finished with %d errors", errors);
+		$stop;
+	 end
 
 //Clock
 always
@@ -172,6 +177,12 @@ initial
 	INV_REM = 0;
 	STORE_REM = 0;
 	INV_OP1 = 0;
+	
+	
+	//check loading to divl
+	#1000
+	assert(instance1.MUX2_2_Y == 0 ) else $display("cant get internal signals"); 
+	finished = finished + 1;
  end
 //Test sequence for result and quotient part of the slice
 initial
@@ -202,16 +213,56 @@ initial
 	STORE_QUOT = 1;
 	
 	#1000
-		assert ( RESULT_1 == Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+		assert ( RESULT_1 == Quotient ) else begin errors = errors + 1; $display("* Quotient error"); end
 
-	RESULT_1 = 0;
-	#1000
-		assert ( RESULT_1 == Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+	RESULT_P = 0;
+	#2000//2000 - this is double buffered
+		assert ( RESULT_1 == Quotient ) else begin errors = errors + 1; $display("* Quotient error"); end
 	
 	INV_RESULT = 1;
 	#1000
-		assert ( RESULT_1 != Quotient ) else begin errors = errors + 1; #display("* Quotient error"); end
+		assert ( RESULT_1 != Quotient ) else begin errors = errors + 1; $display("* Quotient error"); end
 	//need to check it stores when the load signal is low and also check the negating circuit
+	
+	//put a carry in, check store 0 and carry out is 1
+	RESULT_INV_Cin = 1; 
+	#1000
+		assert ( 1 == RESULT_INV_Cout ) else begin errors = errors + 1; $display("* Carry error"); end
+		assert ( 0 == Quotient ) else begin errors = errors + 1; $display("* Negator quoteient errors"); end
+	
+	RESULT_P = 1; //should now get now carry but sum is high
+	#2000
+		assert ( 0 == RESULT_INV_Cout ) else begin errors = errors + 1; $display("* Carry error"); end
+		assert ( 1 == Quotient ) else begin errors = errors + 1; $display("* Negator quoteient errors"); end
+	
+
+	//one is in the quot, disable store and check the value persists
+	STORE_QUOT = 0; 
+	INV_RESULT = 0; 
+	RESULT_P = 0;
+	RESULT_INV_Cin = 0;
+	#2000
+		assert ( 0 == RESULT_1 ) else begin errors = errors + 1; $display("* RESULT_1 error"); end
+		assert ( 1 == Quotient ) else begin errors = errors + 1; $display("* Store error"); end
+	
+	STORE_QUOT = 1; 
+	#1000
+		assert ( 0 == Quotient ) else begin errors = errors + 1; $display("* Store error"); end
+	
+	STORE_QUOT = 0; 
+	INV_RESULT = 1; //put a one into D of the reg
+
+	#1000
+		assert ( 0 == Quotient ) else begin errors = errors + 1; $display("* Store error"); end
+	
+	STORE_QUOT = 1; //now check it stores
+	#1000
+		assert ( 1 == Quotient ) else begin errors = errors + 1; $display("* Store error"); end
+	
+	#1000
+	finished = finished + 1;
+	
+	
  end
 //Test sequence for the first loading and shifting into DIVH
 initial
@@ -248,6 +299,9 @@ initial
         #1000
                 assert(OP2_INV_Cout == 1) else begin errors = errors + 1; $display("DIVH_1 Err 6 "); end
                 assert(DIVH_0 != DIVH_1) else begin errors = errors + 1; $display("DIVH_0 Err 6"); end
+	
+	#1000
+	finished = finished + 1;
 end
 
 
