@@ -4,6 +4,8 @@ type="$1"
 module="$2"
 tcl="$3"
 clear
+echo Cleaning...
+./clean.sh
 echo :extract > extscript
 echo :quit >> extscript
 if [ "sv" = $type ]; then
