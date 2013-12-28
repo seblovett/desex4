@@ -101,12 +101,9 @@ always
 always
 begin
         Clock = 0;
-        for(int i = 0; i < 12; i++)
-        begin
-                #250 Clock = 1;
-                #500 Clock = 0;
-                #250 Clock = 0;
-        end
+        #250 Clock = 1;
+        #500 Clock = 0;
+        #250 Clock = 0;
 end
 
 //Reset pulse
