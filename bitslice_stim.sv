@@ -197,12 +197,164 @@ initial
 		assert( 1 == instance1.ACC_Q ) else begin $display("* ACC load error"); errors = errors + 1; end
 	
 	//check negator
+	Operand1 = 1; 
+	OP1_INV_Cin = 0; 
+	INV_OP1 = 1; //chose the inverted
+	LOAD_ACC = 1; 
+	STORE_ACC = 1; 
+	//0 + 0
+	#1000
+		assert ( 0 == instance1.ACC_Q ) else begin $display("* Negator error"); errors = errors + 1; end
 	
-	//check full adder circuit
+	Operand1 = 0; //1+0
+	#1000
+		assert ( 1 == instance1.ACC_Q ) else begin $display("* Negator error"); errors = errors + 1; end
+	
+	OP1_INV_Cin = 1; //1+1
+	#1000
+		assert ( 0 == instance1.ACC_Q ) else begin $display("* Negator error"); errors = errors + 1; end
+		assert ( 1 == OP1_INV_Cout    ) else begin $display("* Negator error"); errors = errors + 1; end
+	
+	Operand1 = 1; //1+0
+	#1000
+		assert ( 1 == instance1.ACC_Q ) else begin $display("* Negator error"); errors = errors + 1; end
+		assert ( 0 == OP1_INV_Cout    ) else begin $display("* Negator error"); errors = errors + 1; end
 
-	//check storing to remainder circuit:
+	//check full adder circuit
 	
-	//check negating acc
+	//load 0 to ACC (FA.B)
+	OP1_INV_Cin = 0;
+	Operand1 = 0;
+	INV_OP1 = 0;
+	LOAD_ACC = 1; 
+	STORE_ACC = 1;
+	//FA.A = 0 => DIVL = 1 
+	LOAD_DIVL = 0;
+	DIVL_P = 1;
+
+	#1000 //load values into register
+		assert( 0 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+
+	LOAD_ACC = 0; //load in the output of the full adder
+	ACC_Cin = 1; // 
+
+	#1000 //0 + 0 + 1 = 01
+		assert( 1 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 0 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+
+	DIVL_P = 0;//FA.A = 1 on next cycle 
+	#1000 //0 + 1 + 1 = 10
+		assert( 0 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 1 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	ACC_Cin = 0;
+	#1000 //1 + 0 + 0 = 01
+		assert( 1 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 0 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	ACC_Cin = 1;
+	#1000 //1 + 1 + 1 = 11
+		assert( 1 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 1 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	ACC_Cin = 0;
+	#1000 //1 + 1 + 0 = 10
+		assert( 0 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 1 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	#1000 //1 + 0 + 1 = 10
+		assert( 0 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 1 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	DIVL_P = 1; //FA.A = 0
+	ACC_Cin = 1;
+	//need to repeat a state
+	#1000 //0 + 0 + 1 = 01
+		assert( 1 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 0 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	ACC_Cin = 0;
+	#1000 // 0 + 1 + 0 = 01
+		assert( 1 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 0 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	ACC_Cin = 1; 
+	//again
+	#1000 //0 + 1 + 1 = 10
+		assert( 0 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 1 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	ACC_Cin = 0;
+	#1000 //0 + 0 + 0 = 00
+		assert( 0 == instance1.ACC_Q ) else begin $display("Full adder error"); errors = errors + 1; end
+		assert( 0 == ACC_Cout ) else begin $display("Full Adder Cout error"); errors = errors + 1; end
+	
+	//check storing to remainder circuit:
+	LOAD_ACC = 1; //load from the Operand1 input
+	INV_OP1 = 0;
+	STORE_ACC = 1;
+	Operand1 = 0;
+	INV_REM = 0;
+	STORE_REM = 0; //don't store just yet..
+	ACC_INV_Cin = 0;
+	
+	
+	#1000 //check ACC has stored correctly
+		assert( 0 == instance1.ACC_Q ) else begin $display("ACC store error"); errors = errors + 1; end
+	
+	STORE_ACC = 1; //store to output
+	#1000
+		assert(0 == Remainder) else begin $display("REM store error"); errors = errors + 1; end
+	
+	INV_REM = 1;
+	#1000
+		assert(1 == Remainder) else begin $display("REM store error"); errors = errors + 1; end
+		assert(0 == ACC_INV_Cout ) else begin $display("ACC negator error"); errors = errors + 1; end	
+
+	ACC_INV_Cin = 1;
+	#1000
+		assert(0 == Remainder) else begin $display("REM store error"); errors = errors + 1; end
+		assert(1 == ACC_INV_Cout ) else begin $display("ACC negator error"); errors = errors + 1; end
+
+	STORE_REM = 0; 
+	Operand1 = 1;
+	INV_REM = 0;
+	ACC_INV_Cin = 0;
+	#1000 //check ACC has stored correctly
+		assert( 1 == instance1.ACC_Q ) else begin $display("ACC store error"); errors = errors + 1; end
+	
+	//check that the store persists.. 
+	#1000
+		assert(0 == Remainder) else begin $display("REM store error"); errors = errors + 1; end
+	
+	//now store
+	STORE_REM = 1;
+	#1000
+		assert(1 == Remainder) else begin $display("REM store error"); errors = errors + 1; end
+	
+	INV_REM = 1;
+	#1000
+		assert(0 == Remainder) else begin $display("REM store error"); errors = errors + 1; end
+		assert(0 == ACC_INV_Cout ) else begin $display("ACC negator error"); errors = errors + 1; end	
+	ACC_INV_Cin = 1;
+	#1000
+		assert(1 == Remainder) else begin $display("REM store error"); errors = errors + 1; end
+		assert(0 == ACC_INV_Cout ) else begin $display("ACC negator error"); errors = errors + 1; end	
+	
+	//reset all signals 
+
+	DIVL_P = 0;
+	LOAD_DIVL = 0;
+	Operand1 = 0;
+	OP1_INV_Cin = 0;
+	ACC_Cin = 0;
+	LOAD_ACC = 0;
+	STORE_ACC = 0;
+	ACC_INV_Cin = 0;
+	INV_REM = 0;
+	STORE_REM = 0;
+	INV_OP1 = 0;
 	
 	finished = finished + 1;
  end
