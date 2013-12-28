@@ -180,8 +180,33 @@ initial
 	
 	
 	//check loading to divl
+	DIVL_P = 1;
 	#1000
-	assert(instance1.MUX2_2_Y == 0 ) else $display("cant get internal signals"); 
+		assert( DIVL_P == DIVL_1 ) else begin $display("* DIVL load error"); errors = errors + 1; end
+	
+	LOAD_DIVL = 0;
+	#1000
+		assert( 0 == DIVL_1 ) else begin $display("* DIVL load error"); errors = errors + 1; end 
+	
+	//check loading op1 to acc
+	Operand1 = 0;
+	INV_OP1 = 0;
+	LOAD_ACC = 1;
+	STORE_ACC = 1;
+	#1000	
+		assert( 0 == instance1.ACC_Q ) else begin $display("* ACC load error"); errors = errors + 1; end
+	Operand1 = 1;
+	#1000	
+		assert( 1 == instance1.ACC_Q ) else begin $display("* ACC load error"); errors = errors + 1; end
+	
+	//check negator
+	
+	//check full adder circuit
+
+	//check storing to remainder circuit:
+	
+	//check negating acc
+	
 	finished = finished + 1;
  end
 //Test sequence for result and quotient part of the slice
